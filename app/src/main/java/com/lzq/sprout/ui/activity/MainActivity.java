@@ -1,13 +1,11 @@
 package com.lzq.sprout.ui.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 
-import com.lzq.sprout.base.BaseMvpActivity;
-import com.lzq.sprout.contract.MainContract;
-import com.lzq.sprout.presenter.MainPresenterImpl;
 import com.lzq.sprout.utils.Log;
 
-public class MainActivity extends BaseMvpActivity<MainContract.IMainPresenter> implements MainContract.IMainView {
+public class MainActivity extends Activity {
     private static final Log.Tag TAG = new Log.Tag("MainActivity");
 
     @Override
@@ -38,10 +36,5 @@ public class MainActivity extends BaseMvpActivity<MainContract.IMainPresenter> i
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    protected MainContract.IMainPresenter createPresenter() {
-        return new MainPresenterImpl();
     }
 }

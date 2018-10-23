@@ -1,6 +1,6 @@
 package com.lzq.sprout.model;
 
-import com.lzq.sprout.base.BaseModel;
+import com.lzq.sprout.base.model.BaseModel;
 
 public class DataModel {
     public static BaseModel requestModel(String token){

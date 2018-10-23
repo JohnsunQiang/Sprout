@@ -1,4 +1,4 @@
-package com.lzq.sprout.base;
+package com.lzq.sprout.base.view;
 
 public interface IBaseMvpView {
 }

@@ -1,4 +1,4 @@
-package com.lzq.sprout.base;
+package com.lzq.sprout.base.model;
 
 import com.lzq.sprout.model.bean.BaseBean;
 import com.lzq.sprout.model.http.HttpSubscriber;
@@ -15,8 +15,6 @@ public abstract class BaseModel<T> {
         mParams = args;
         return this;
     }
-
-    public abstract void requestGetAPI(String url);
 
     public abstract void requestPostAPI(String url, HttpSubscriber<BaseBean<T>> params);
 }
