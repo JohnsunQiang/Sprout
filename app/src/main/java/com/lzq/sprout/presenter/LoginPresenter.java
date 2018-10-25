@@ -11,6 +11,7 @@ import com.lzq.sprout.utils.Constants;
 
 public class LoginPresenter extends BaseMvpPresenter<ILoginView> {
 
+
     public void login(String... params) {
         DataModel.requestModel(Token.API_MAIN_DATA)
                 .setParams(params).requestPostAPI(Constants.RequestApis.LOGIN, new HttpSubscriber<BaseBean<LoginInfo>>() {
@@ -19,15 +20,17 @@ public class LoginPresenter extends BaseMvpPresenter<ILoginView> {
             }
 
             @Override
-            public void onSuccess(BaseBean baseBean) {
+            public void onSuccess(BaseBean<LoginInfo> loginResult) {
                 if (isViewAttached()) {
-                    getView().resultOK();
+                    getView().loginSuccess(loginResult);
                 }
             }
 
             @Override
             public void onError(String msg) {
-
+                if (isViewAttached()) {
+                    getView().loginFail(msg);
+                }
             }
 
             @Override
@@ -35,5 +38,10 @@ public class LoginPresenter extends BaseMvpPresenter<ILoginView> {
 
             }
         });
+    }
+
+    @Override
+    public void onDestroyPersenter() {
+
     }
 }

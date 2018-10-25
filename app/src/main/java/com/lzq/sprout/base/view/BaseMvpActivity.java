@@ -1,9 +1,11 @@
 package com.lzq.sprout.base.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.lzq.sprout.app.SproutApp;
 import com.lzq.sprout.base.factory.IPresenterMvpFactory;
 import com.lzq.sprout.base.factory.PresenterMvpFactoryImpl;
 import com.lzq.sprout.base.presenter.BaseMvpPresenter;
@@ -14,14 +16,20 @@ import com.lzq.sprout.utils.Constants;
 public abstract class BaseMvpActivity<V extends IBaseMvpView, P extends BaseMvpPresenter<V>> extends Activity implements IPresenterProxy<V, P> {
 
     private PresenterProxyImpl<V, P> mProxy = new PresenterProxyImpl<>(PresenterMvpFactoryImpl.<V, P>createFactory(getClass()));
+    protected Context mAppContext;
+    protected Context mContext;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAppContext = SproutApp.getMyApplicationContext();
+        mContext = BaseMvpActivity.this;
 
         if (null != savedInstanceState) {
             mProxy.onRestoreInstanceState(savedInstanceState.getBundle(Constants.Presenter.PRESENTER_SAVE_BUNDLE));
         }
+        setContentView(getLayoutId());
+        initViews();
     }
 
     @Override
@@ -56,4 +64,8 @@ public abstract class BaseMvpActivity<V extends IBaseMvpView, P extends BaseMvpP
     public P getMvpPresenter() {
         return mProxy.getMvpPresenter();
     }
+
+    protected abstract int getLayoutId();
+
+    protected abstract void initViews();
 }

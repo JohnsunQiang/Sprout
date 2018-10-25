@@ -1,8 +1,5 @@
 package com.lzq.sprout.model.http;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-
 import com.lzq.sprout.utils.NetworkUtils;
 
 import java.net.ConnectException;
@@ -28,13 +25,6 @@ public abstract class HttpSubscriber<T> extends Subscriber<T> {
         } else {
             onStartCallBack();
         }
-//        else {
-//            if (progressDialog == null && isShowDialog) {
-//                progressDialog = new ProgressDialog(context);
-//                progressDialog.setMessage("正在加载...");
-//                progressDialog.show();
-//            }
-//        }
     }
 
     @Override
@@ -43,10 +33,6 @@ public abstract class HttpSubscriber<T> extends Subscriber<T> {
         if (!isUnsubscribed()) {
             unsubscribe();
         }
-//        if (progressDialog != null && isShowDialog) {
-//            progressDialog.dismiss();
-//            progressDialog = null;
-//        }
     }
 
     @Override
@@ -63,10 +49,6 @@ public abstract class HttpSubscriber<T> extends Subscriber<T> {
         } else {
             onError("未知异常："+e.getMessage());
         }
-//        if (progressDialog != null && isShowDialog) {
-//            progressDialog.dismiss();
-//            progressDialog = null;
-//        }
     }
 
     @Override
