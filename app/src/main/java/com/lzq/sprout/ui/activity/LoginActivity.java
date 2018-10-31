@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -13,20 +15,22 @@ import com.lzq.sprout.base.view.ILoginView;
 import com.lzq.sprout.model.bean.BaseBean;
 import com.lzq.sprout.model.bean.LoginInfo;
 import com.lzq.sprout.presenter.LoginPresenter;
+import com.lzq.sprout.utils.AppUtils;
 import com.lzq.sprout.utils.Constants;
 import com.lzq.sprout.utils.Log;
 import com.lzq.sprout.utils.SharedPreferenceUtils;
+import com.lzq.sprout.utils.ToastUtils;
 
 public class LoginActivity extends BaseMvpActivity<ILoginView, LoginPresenter> implements ILoginView {
     private static final Log.Tag TAG = new Log.Tag("LoginFragment");
 
     SharedPreferenceUtils mDefaultPref;
 
-    EditText etUsername;
-    EditText etPassword;
-    Button loginBtn;
-    CardView cardview;
-    FloatingActionButton fabBtn;
+    EditText mEtUsername;
+    EditText mEtPassword;
+    Button mLoginBtn;
+    CardView mCardview;
+    FloatingActionButton mFabBtn;
 
     private boolean mIsFromLaunch;
 
@@ -41,7 +45,7 @@ public class LoginActivity extends BaseMvpActivity<ILoginView, LoginPresenter> i
     private void initData() {
         // if it do before each login
         mDefaultPref = new SharedPreferenceUtils();
-        mDefaultPref.saveData(Constants.Login.KEY_ACCESS_TOKEN, "");
+        mDefaultPref.saveData(Constants.Login.KEY_LOGIN_TOKEN, "");
     }
 
     @Override
@@ -56,22 +60,43 @@ public class LoginActivity extends BaseMvpActivity<ILoginView, LoginPresenter> i
 
     @Override
     protected void initViews() {
-        etUsername = findViewById(R.id.et_username);
-        etPassword = findViewById(R.id.et_password);
+        mEtUsername = findViewById(R.id.et_username);
+        mEtPassword = findViewById(R.id.et_password);
+        mEtUsername.setText("1234");
+        mEtPassword.setText("1234");
 
-        loginBtn = findViewById(R.id.login_btn);
+        mLoginBtn = findViewById(R.id.login_btn);
+        mLoginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String username = mEtUsername.getText().toString().trim();
+                String password = mEtPassword.getText().toString().trim();
+                if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
+                    Log.w(TAG, "username or password is null");
+                    return;
+                }
+                getMvpPresenter().login(username, password);
+            }
+        });
 
-        cardview = findViewById(R.id.cardview);
-        fabBtn = findViewById(R.id.fab_btn);
+        mCardview = findViewById(R.id.cardview);
+        mFabBtn = findViewById(R.id.fab_btn);
     }
 
     @Override
     public void loginSuccess(BaseBean<LoginInfo> loginResullt) {
+        mDefaultPref.saveData(Constants.Login.KEY_LOGIN_TOKEN, loginResullt.getData().getToken());
+        mDefaultPref.saveData(Constants.Login.KEY_LAST_ACCOUNT, mEtUsername.getText().toString().trim());
 
+        if (mIsFromLaunch) {
+            AppUtils.startActivity(this, MainActivity.class);
+            finish();
+        }
     }
 
     @Override
     public void loginFail(String failMsg) {
-
+        ToastUtils.showCenterToast("login fail = " + failMsg);
+        Log.w(TAG, "login error=" + failMsg);
     }
 }

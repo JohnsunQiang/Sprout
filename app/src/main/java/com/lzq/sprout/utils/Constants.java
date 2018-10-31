@@ -16,7 +16,8 @@ public class Constants {
      * login
      */
     public static class Login {
-        public static final String KEY_ACCESS_TOKEN = "KEY_ACCESS_TOKEN";
+        public static final String KEY_LOGIN_TOKEN = "KEY_TOKEN";
+        public static final String KEY_LAST_ACCOUNT = "KEY_LAST_ACCOUNT";
 
         public static final String INTENT_PARAM_ISFROMLAUNCH = "isFromLaunch";
     }

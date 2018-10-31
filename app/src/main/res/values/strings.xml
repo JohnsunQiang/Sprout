@@ -5,4 +5,7 @@
     <string name="login">LOGIN</string>
     <string name="Username">Username</string>
     <string name="Password">Password</string>
+
+    <string name="tab_home">小家</string>
+    <string name="tab_personal">我的</string>
 </resources>

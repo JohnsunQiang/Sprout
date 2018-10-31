@@ -2,16 +2,8 @@ package com.lzq.sprout.model.bean;
 
 public class LoginInfo extends BaseBean {
     private String token;
-    private String type;
-    private String is_allow_create;
-
-    public String getIs_allow_create() {
-        return is_allow_create;
-    }
-
-    public void setIs_allow_create(String is_allow_create) {
-        this.is_allow_create = is_allow_create;
-    }
+    private String token_type;
+    private long expires;
 
     public String getToken() {
         return token;
@@ -22,19 +14,27 @@ public class LoginInfo extends BaseBean {
     }
 
     public String getType() {
-        return type;
+        return token_type;
     }
 
     public void setType(String type) {
-        this.type = type;
+        this.token_type = type;
+    }
+
+    public long getExpires() {
+        return expires;
+    }
+
+    public void setExpires(long expires) {
+        this.expires = expires;
     }
 
     @Override
     public String toString() {
         return "LoginInfo{" +
                 "token='" + token + '\'' +
-                ", type='" + type + '\'' +
-                ", is_allow_create='" + is_allow_create + '\'' +
+                ", type='" + token_type + '\'' +
+                ", expires='" + expires + '\'' +
                 '}';
     }
 }
