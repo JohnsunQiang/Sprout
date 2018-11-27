@@ -1,4 +1,4 @@
-package com.lzq.sprout.model.http;
+package com.lzq.sprout.model.http.interceptor;
 
 import java.io.IOException;
 
@@ -25,7 +25,7 @@ public class ResponseInterceptor implements Interceptor {
             if (!json.contains(emptyString)) {
                 ResponseBody body = ResponseBody.create(contentType, json);
                 return response.newBuilder().body(body).build();
-            }else {
+            } else {
                 String replace = json.replace(emptyString, newChars);
                 String replace1 = replace.replace(emptyObject, newChars);
                 String replace2 = replace1.replace(emptyArray, newChars);

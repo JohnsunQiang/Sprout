@@ -1,71 +1,55 @@
 package com.lzq.sprout.base.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.lzq.sprout.app.SproutApp;
-import com.lzq.sprout.base.factory.IPresenterMvpFactory;
-import com.lzq.sprout.base.factory.PresenterMvpFactoryImpl;
 import com.lzq.sprout.base.presenter.BaseMvpPresenter;
-import com.lzq.sprout.base.proxy.PresenterProxyImpl;
-import com.lzq.sprout.base.proxy.IPresenterProxy;
-import com.lzq.sprout.utils.Constants;
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
-public abstract class BaseMvpActivity<V extends IBaseMvpView, P extends BaseMvpPresenter<V>> extends Activity implements IPresenterProxy<V, P> {
+import butterknife.ButterKnife;
 
-    private PresenterProxyImpl<V, P> mProxy = new PresenterProxyImpl<>(PresenterMvpFactoryImpl.<V, P>createFactory(getClass()));
+public abstract class BaseMvpActivity<V extends IBaseMvpView, P extends BaseMvpPresenter<V>> extends RxAppCompatActivity {
+
     protected Context mAppContext;
-    protected Context mContext;
+    protected P mPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAppContext = SproutApp.getMyApplicationContext();
-        mContext = BaseMvpActivity.this;
-
-        if (null != savedInstanceState) {
-            mProxy.onRestoreInstanceState(savedInstanceState.getBundle(Constants.Presenter.PRESENTER_SAVE_BUNDLE));
-        }
         setContentView(getLayoutId());
+        ButterKnife.bind(this);
+        mAppContext = SproutApp.getMyApplicationContext();
+        mPresenter = createPresenter();
+        if (null != mPresenter) {
+            mPresenter.setLifecycleProvider(this);
+        }
         initViews();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mProxy.onResume((V) this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mProxy.onDestroy();
+        if (null != mPresenter) {
+            mPresenter.onDestroyPersenter();
+            mPresenter = null;
+        }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBundle(Constants.Presenter.PRESENTER_SAVE_BUNDLE, mProxy.onSaveInstanceState());
-    }
-
-    @Override
-    public void setPresenterFactory(IPresenterMvpFactory<V, P> presenterFactory) {
-        mProxy.setPresenterFactory(presenterFactory);
-    }
-
-    @Override
-    public IPresenterMvpFactory<V, P> getPresenterFactory() {
-        return mProxy.getPresenterFactory();
-    }
-
-    @Override
-    public P getMvpPresenter() {
-        return mProxy.getMvpPresenter();
     }
 
     protected abstract int getLayoutId();
 
     protected abstract void initViews();
+
+    protected abstract P createPresenter();
 }

@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder;
 import com.lzq.sprout.utils.Constants;
 
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitManager {
@@ -30,12 +30,16 @@ public class RetrofitManager {
     private void resetRetrofit() {
         if (null == sRetrofit) {
             sRetrofit = new Retrofit.Builder()
-                    .baseUrl(Constants.RequestApis.LOGIN)
+                    .baseUrl(Constants.RequestApis.BASE_URL)
                     .client(OkHttpManager.getOkHttpClient())
                     .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().create()))
-                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
         }
+    }
+
+    public RetrofitInterface getServer() {
+        return sRetrofit.create(RetrofitInterface.class);
     }
 
     public <T> T getServer(Class<T> server) {

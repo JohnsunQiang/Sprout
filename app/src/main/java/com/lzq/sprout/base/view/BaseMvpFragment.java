@@ -4,104 +4,72 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kingja.loadsir.callback.Callback;
-import com.kingja.loadsir.core.LoadService;
-import com.kingja.loadsir.core.LoadSir;
-import com.lzq.sprout.base.factory.IPresenterMvpFactory;
-import com.lzq.sprout.base.factory.PresenterMvpFactoryImpl;
 import com.lzq.sprout.base.presenter.BaseMvpPresenter;
-import com.lzq.sprout.base.proxy.IPresenterProxy;
-import com.lzq.sprout.base.proxy.PresenterProxyImpl;
-import com.lzq.sprout.utils.Constants;
+import com.trello.rxlifecycle2.components.support.RxFragment;
 
-public abstract class BaseMvpFragment<V extends IBaseMvpView, P extends BaseMvpPresenter<V>> extends Fragment implements IPresenterProxy<V, P> {
+import butterknife.ButterKnife;
 
-    private PresenterProxyImpl<V, P> mProxy = new PresenterProxyImpl<>(PresenterMvpFactoryImpl.<V, P>createFactory(getClass()));
+public abstract class BaseMvpFragment<V extends IBaseMvpView, P extends BaseMvpPresenter<V>> extends RxFragment {
+
     protected Activity mActivity;
-    protected LoadService mBaseLoadService;
+    protected P mPresenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (null != savedInstanceState) {
-            mProxy.onRestoreInstanceState(savedInstanceState.getBundle(Constants.Presenter.PRESENTER_SAVE_BUNDLE));
-        }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = View.inflate(getActivity(), onCreateFragmentView(), null);
-
-        mBaseLoadService = LoadSir.getDefault().register(rootView, new Callback.OnReloadListener() {
-            @Override
-            public void onReload(View v) {
-                onHttpReload(v);
-            }
-        });
+        View rootView = inflater.inflate(getLayoutId(), container, false);
+        ButterKnife.bind(this, rootView);
+        mActivity = getActivity();
+        mPresenter = createPresenter();
+        if (null != mPresenter) {
+            mPresenter.setLifecycleProvider(this);
+        }
         initViews(rootView);
 
-        return mBaseLoadService.getLoadLayout();
+        return rootView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadHttp();
     }
 
-    protected void onHttpReload(View v) {
-    }
+    protected abstract int getLayoutId();
 
-    protected void loadHttp() {
-        mBaseLoadService.showSuccess();
-    }
+    protected abstract void initViews(View rootView);
 
-    protected abstract int onCreateFragmentView();
-    public abstract void initViews(View rootView);
+    protected abstract P createPresenter();
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        this.mActivity = (Activity) context;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mProxy.onResume((V) this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mProxy.onDestroy();
+        if (null != mPresenter) {
+            mPresenter.onDestroyPersenter();
+            mPresenter = null;
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBundle(Constants.Presenter.PRESENTER_SAVE_BUNDLE, mProxy.onSaveInstanceState());
-    }
-
-    @Override
-    public void setPresenterFactory(IPresenterMvpFactory<V, P> presenterFactory) {
-        mProxy.setPresenterFactory(presenterFactory);
-    }
-
-    @Override
-    public IPresenterMvpFactory<V, P> getPresenterFactory() {
-        return mProxy.getPresenterFactory();
-    }
-
-    @Override
-    public P getMvpPresenter() {
-        return mProxy.getMvpPresenter();
     }
 }

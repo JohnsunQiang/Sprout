@@ -9,12 +9,17 @@ import com.lzq.sprout.presenter.PersonalPresenter;
 
 public class PersonalFragment extends BaseMvpFragment<IPersonalView, PersonalPresenter> implements IPersonalView {
     @Override
-    protected int onCreateFragmentView() {
+    protected int getLayoutId() {
         return R.layout.fragment_presenter;
     }
 
     @Override
     public void initViews(View rootView) {
 
+    }
+
+    @Override
+    protected PersonalPresenter createPresenter() {
+        return new PersonalPresenter();
     }
 }

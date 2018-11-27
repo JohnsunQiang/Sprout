@@ -3,17 +3,10 @@ package com.lzq.sprout.model.bean;
 import java.io.Serializable;
 
 public class BaseBean<T> implements Serializable {
-    private String result;
+    private int code;
     private String msg;
-    private T data;
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
+    private T results;
+    private boolean error;
 
     public String getMsg() {
         return msg;
@@ -24,19 +17,26 @@ public class BaseBean<T> implements Serializable {
     }
 
     public T getData() {
-        return data;
+        return results;
     }
 
     public void setData(T data) {
-        this.data = data;
+        this.results = data;
     }
 
-    @Override
-    public String toString() {
-        return "BaseBean{" +
-                "result='" + result + '\'' +
-                ", msg='" + msg + '\'' +
-                ", data=" + data +
-                '}';
+    public boolean isError() {
+        return error;
+    }
+
+    public void setError(boolean error) {
+        this.error = error;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 }

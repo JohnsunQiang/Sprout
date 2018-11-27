@@ -29,7 +29,8 @@ public class Log {
     }
 
     public static void d(Tag tag, String msg) {
-        Logger.d(tag.toString(), msg);
+//        Logger.d(tag.toString(), msg);
+        android.util.Log.d(tag.toString(), msg);
     }
 
     public static void d(Tag tag, Object object) {
