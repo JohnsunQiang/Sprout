@@ -52,4 +52,8 @@ public abstract class BaseMvpActivity<V extends IBaseMvpView, P extends BaseMvpP
     protected abstract void initViews();
 
     protected abstract P createPresenter();
+
+    protected boolean isActivityActive() {
+        return !isFinishing() || !isDestroyed();
+    }
 }

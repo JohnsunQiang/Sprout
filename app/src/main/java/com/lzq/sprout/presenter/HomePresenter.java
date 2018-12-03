@@ -14,13 +14,14 @@ public class HomePresenter extends BaseMvpPresenter<IHomeView> {
     private static final Log.Tag TAG = new Log.Tag("HomePresenter");
     private HomeModel mHomeModel;
 
-    public HomePresenter() {
+    public HomePresenter(IHomeView view) {
+        super(view);
         mHomeModel = new HomeModel();
     }
 
     public void getMeizi() {
         if (null != mHomeModel && isViewAttached()) {
-            mHomeModel.getMeizi(new HttpSubscriber<BaseBean<List<Meizi>>>() {
+            HttpSubscriber<BaseBean<List<Meizi>>> subscriber = new HttpSubscriber<BaseBean<List<Meizi>>>() {
                 @Override
                 public void onStartCallBack() {
 
@@ -35,7 +36,9 @@ public class HomePresenter extends BaseMvpPresenter<IHomeView> {
                 public void onError(String msg) {
 
                 }
-            }, getLifecycleProvider());
+            };
+            mHomeModel.getMeizi(subscriber, getLifecycleProvider());
+            addDisposable(subscriber);
         }
     }
 }

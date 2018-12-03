@@ -9,9 +9,6 @@ import io.reactivex.observers.DisposableObserver;
 
 public abstract class HttpSubscriber<T> extends DisposableObserver<T> {
 
-    public HttpSubscriber() {
-    }
-
     @Override
     public void onStart() {
         super.onStart();

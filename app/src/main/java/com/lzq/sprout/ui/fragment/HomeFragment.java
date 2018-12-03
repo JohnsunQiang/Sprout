@@ -20,7 +20,6 @@ public class HomeFragment extends BaseMvpFragment<IHomeView, HomePresenter> impl
     public void initViews(View rootView) {
         Log.d(TAG, "initViews");
         if (null != mPresenter) {
-            mPresenter.setView(this);
             mPresenter.getMeizi();
         }
     }
@@ -28,6 +27,11 @@ public class HomeFragment extends BaseMvpFragment<IHomeView, HomePresenter> impl
 
     @Override
     protected HomePresenter createPresenter() {
-        return new HomePresenter();
+        return new HomePresenter(this);
+    }
+
+    @Override
+    public boolean isViewActive() {
+        return isFragmentActive();
     }
 }

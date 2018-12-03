@@ -20,6 +20,11 @@ public class PersonalFragment extends BaseMvpFragment<IPersonalView, PersonalPre
 
     @Override
     protected PersonalPresenter createPresenter() {
-        return new PersonalPresenter();
+        return new PersonalPresenter(this);
+    }
+
+    @Override
+    public boolean isViewActive() {
+        return isFragmentActive();
     }
 }

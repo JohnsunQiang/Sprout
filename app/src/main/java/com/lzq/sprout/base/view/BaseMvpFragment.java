@@ -72,4 +72,12 @@ public abstract class BaseMvpFragment<V extends IBaseMvpView, P extends BaseMvpP
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
+
+    protected boolean isActivityActive() {
+        return mActivity != null && (!mActivity.isFinishing() || !mActivity.isDestroyed());
+    }
+
+    protected boolean isFragmentActive() {
+        return !isDetached() || !isRemoving() || isActivityActive();
+    }
 }

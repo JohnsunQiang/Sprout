@@ -62,7 +62,7 @@ public class LoginActivity extends BaseMvpActivity<ILoginView, LoginPresenter> i
 
     @Override
     protected LoginPresenter createPresenter() {
-        return new LoginPresenter();
+        return new LoginPresenter(this);
     }
 
     @Override
@@ -76,5 +76,10 @@ public class LoginActivity extends BaseMvpActivity<ILoginView, LoginPresenter> i
     public void loginFail(String failMsg) {
         ToastUtils.showCenterToast("login fail = " + failMsg);
         Log.w(TAG, "login error=" + failMsg);
+    }
+
+    @Override
+    public boolean isViewActive() {
+        return isActivityActive();
     }
 }

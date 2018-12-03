@@ -5,6 +5,10 @@ import com.lzq.sprout.base.view.ILoginView;
 
 public class LoginPresenter extends BaseMvpPresenter<ILoginView> {
 
+    public LoginPresenter(ILoginView view) {
+        super(view);
+    }
+
     public void login(String... params) {
 //        MainDataModel<LoginInfo> mMainDataModel = new MainDataModel<LoginInfo>();
 //        mMainDataModel.requestPostAPI(Constants.RequestApis.BASE_URL, params, new HttpSubscriber<BaseBean<LoginInfo>>() {
